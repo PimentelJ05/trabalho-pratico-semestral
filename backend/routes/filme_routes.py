@@ -1,71 +1,99 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, status
 from models.filme_model import Filme, FilmeAtualizacao
+from database import filmes_collection
 from uuid import uuid4
+
 
 router = APIRouter(
     prefix="/filmes",
     tags=["Filmes"]
 )
 
-filmes = []
 
-
-@router.post("/")
-def criar_filme(filme: Filme):
-
-    novo_filme = {
-        "id": str(uuid4()),
-        **filme.dict()
+def formatar_filme(filme):
+    return {
+        "id": filme["_id"],
+        "titulo": filme["titulo"],
+        "descricao": filme["descricao"],
+        "genero": filme["genero"],
+        "ano": filme["ano"],
+        "diretor": filme["diretor"],
+        "poster_url": filme.get("poster_url")
     }
 
-    filmes.append(novo_filme)
+
+@router.post("/", status_code=status.HTTP_201_CREATED)
+def criar_filme(filme: Filme):
+    novo_filme = {
+        "_id": str(uuid4()),
+        **filme.model_dump()
+    }
+
+    filmes_collection.insert_one(novo_filme)
 
     return {
         "message": "Filme adicionado com sucesso",
-        "filme": novo_filme
+        "filme": formatar_filme(novo_filme)
     }
 
 
 @router.get("/")
 def listar_filmes():
-    return filmes
+    filmes = filmes_collection.find()
+
+    return [formatar_filme(filme) for filme in filmes]
+
 
 @router.get("/{filme_id}")
 def buscar_filme_por_id(filme_id: str):
-    for filme in filmes:
-        if filme["id"] == filme_id:
-            return filme
+    filme = filmes_collection.find_one({"_id": filme_id})
 
-    raise HTTPException(status_code=404, detail="Filme não encontrado")
+    if not filme:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Filme não encontrado"
+        )
+
+    return formatar_filme(filme)
+
 
 @router.put("/{filme_id}")
 def atualizar_filme(filme_id: str, filme_atualizado: FilmeAtualizacao):
+    dados_atualizados = filme_atualizado.model_dump(exclude_unset=True)
 
-    for filme in filmes:
+    if not dados_atualizados:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Nenhum dado enviado para atualização"
+        )
 
-        if filme["id"] == filme_id:
+    resultado = filmes_collection.update_one(
+        {"_id": filme_id},
+        {"$set": dados_atualizados}
+    )
 
-            dados_atualizados = filme_atualizado.dict(exclude_unset=True)
+    if resultado.matched_count == 0:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Filme não encontrado"
+        )
 
-            filme.update(dados_atualizados)
+    filme = filmes_collection.find_one({"_id": filme_id})
 
-            return {
-                "message": "Filme atualizado com sucesso",
-                "filme": filme
-            }
+    return {
+        "message": "Filme atualizado com sucesso",
+        "filme": formatar_filme(filme)
+    }
 
-    raise HTTPException(status_code=404, detail="Filme não encontrado")
 
-@router.delete("/{filme_id}")
+@router.delete("/{filme_id}", status_code=status.HTTP_204_NO_CONTENT)
 def deletar_filme(filme_id: str):
+    resultado = filmes_collection.delete_one({"_id": filme_id})
 
-    for index, filme in enumerate(filmes):
+    if resultado.deleted_count == 0:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Filme não encontrado"
+        )
 
-        if filme["id"] == filme_id:
-            filmes.pop(index)
-
-            return {
-                "message": "Filme deletado com sucesso"
-            }
-
-    raise HTTPException(status_code=404, detail="Filme não encontrado")
+    return None
