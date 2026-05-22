@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from routes.filme_routes import router as filme_router
+from routes.avaliacao_routes import router as avaliacao_router
 
 app = FastAPI(
     title="CineReview API",
@@ -8,7 +9,7 @@ app = FastAPI(
 )
 
 app.include_router(filme_router)
-
+app.include_router(avaliacao_router)
 
 @app.get("/")
 def home():
