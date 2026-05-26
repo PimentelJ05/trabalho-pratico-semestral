@@ -1,0 +1,569 @@
+:root {
+    --soft-blush: #ffd9da;
+    --blush-rose: #ea638c;
+    --dark-raspberry: #89023e;
+    --jet-black: #30343f;
+    --carbon-black: #1b2021;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    min-height: 100vh;
+    color: white;
+    overflow-x: hidden;
+
+    background:
+        radial-gradient(circle at top left, rgba(234,99,140,0.18), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(137,2,62,0.28), transparent 35%),
+        linear-gradient(-45deg,
+            var(--carbon-black),
+            var(--jet-black),
+            #3a2030,
+            var(--dark-raspberry)
+        );
+
+    background-size: 400% 400%;
+    animation: gradientMove 14s ease infinite;
+}
+
+@keyframes gradientMove {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+#app {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    min-height: 100vh;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+    padding: 30px 22px;
+
+    background: rgba(27, 32, 33, 0.82);
+
+    border-right: 1px solid rgba(255,255,255,0.06);
+
+    backdrop-filter: blur(18px);
+
+    position: sticky;
+    top: 0;
+    height: 100vh;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    color: var(--soft-blush);
+
+    font-size: 26px;
+    font-weight: bold;
+
+    margin-bottom: 40px;
+}
+
+.logo svg {
+    color: var(--blush-rose);
+    width: 32px;
+    height: 32px;
+}
+
+/* NAV */
+
+nav {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.nav-btn,
+button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    padding: 14px 18px;
+
+    border: none;
+    border-radius: 16px;
+
+    cursor: pointer;
+
+    color: white;
+
+    font-weight: bold;
+    font-size: 14px;
+
+    background: linear-gradient(
+        135deg,
+        var(--blush-rose),
+        var(--dark-raspberry)
+    );
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        opacity 0.25s ease;
+}
+
+.nav-btn {
+    justify-content: flex-start;
+
+    background: rgba(255,255,255,0.05);
+
+    color: var(--soft-blush);
+
+    border: 1px solid rgba(255,255,255,0.06);
+}
+
+.nav-btn:hover,
+.nav-btn.active,
+button:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 12px 24px rgba(234,99,140,0.25),
+        0 0 20px rgba(234,99,140,0.15);
+
+    opacity: 0.97;
+}
+
+/* MAIN */
+
+.content {
+    padding: 34px;
+}
+
+/* TOPO */
+
+.topo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 20px;
+
+    margin-bottom: 36px;
+
+    animation: fadeDown 0.7s ease;
+}
+
+.topo h1 {
+    font-size: clamp(32px, 5vw, 52px);
+
+    color: var(--soft-blush);
+
+    text-shadow:
+        0 0 20px rgba(234,99,140,0.25);
+}
+
+.topo p {
+    color: rgba(255, 217, 218, 0.75);
+}
+
+.badge {
+    padding: 10px 16px;
+
+    border-radius: 999px;
+
+    background: rgba(255,255,255,0.08);
+
+    border: 1px solid rgba(255,255,255,0.08);
+
+    color: var(--soft-blush);
+
+    backdrop-filter: blur(8px);
+}
+
+/* TELAS */
+
+.tela {
+    display: none;
+
+    animation: fadeUp 0.45s ease;
+}
+
+.tela.ativa {
+    display: block;
+}
+
+/* SECTION */
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 16px;
+
+    margin-bottom: 22px;
+}
+
+.subtitulo {
+    margin-top: 4px;
+
+    color: rgba(255,255,255,0.72);
+}
+
+h2 {
+    color: var(--soft-blush);
+
+    font-size: 32px;
+}
+
+/* GRID */
+
+.grid-cards {
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fit, minmax(320px, 1fr));
+
+    gap: 24px;
+}
+
+/* CARD */
+
+.card {
+    position: relative;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,0.08),
+            rgba(255,255,255,0.04)
+        );
+
+    border: 1px solid rgba(255,255,255,0.08);
+
+    border-radius: 26px;
+
+    padding: 26px;
+
+    backdrop-filter: blur(14px);
+
+    box-shadow:
+        0 12px 35px rgba(0,0,0,0.28);
+
+    transition:
+        transform 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+
+    animation: cardEnter 0.45s ease;
+}
+
+.card::after {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(234,99,140,0.22),
+            transparent 38%
+        );
+
+    opacity: 0;
+
+    transition: 0.25s ease;
+
+    pointer-events: none;
+}
+
+.card:hover {
+    transform: translateY(-6px);
+
+    border-color: rgba(234,99,140,0.28);
+
+    box-shadow:
+        0 16px 40px rgba(0,0,0,0.34),
+        0 0 24px rgba(234,99,140,0.12);
+}
+
+.card:hover::after {
+    opacity: 1;
+}
+
+.card h3,
+.card p,
+.card span {
+    position: relative;
+    z-index: 2;
+}
+
+.card h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    color: var(--blush-rose);
+
+    margin-bottom: 16px;
+
+    font-size: 20px;
+}
+
+.card p {
+    color: rgba(255,255,255,0.9);
+
+    line-height: 1.6;
+
+    margin-bottom: 10px;
+}
+
+.card .id {
+    display: inline-block;
+
+    margin-top: 16px;
+
+    font-size: 12px;
+
+    color: rgba(255,255,255,0.6);
+
+    word-break: break-all;
+}
+
+/* FORM */
+
+.form-container {
+    max-width: 760px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,0.08),
+            rgba(255,255,255,0.04)
+        );
+
+    border-radius: 28px;
+
+    padding: 34px;
+
+    border: 1px solid rgba(255,255,255,0.08);
+
+    backdrop-filter: blur(14px);
+
+    box-shadow:
+        0 12px 35px rgba(0,0,0,0.24);
+
+    margin-bottom: 36px;
+}
+
+form {
+    display: grid;
+    gap: 16px;
+
+    margin-top: 18px;
+}
+
+/* INPUTS */
+
+input,
+textarea {
+    width: 100%;
+
+    padding: 16px;
+
+    border-radius: 16px;
+
+    border: 1px solid rgba(255,255,255,0.08);
+
+    background: rgba(255,255,255,0.06);
+
+    color: white;
+
+    outline: none;
+
+    font-size: 15px;
+
+    transition: 0.25s ease;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: rgba(255,255,255,0.45);
+}
+
+input:focus,
+textarea:focus {
+    border-color: var(--blush-rose);
+
+    background: rgba(255,255,255,0.08);
+
+    box-shadow:
+        0 0 0 4px rgba(234,99,140,0.15);
+}
+
+/* AÇÕES DOS CARDS */
+
+.acoes-card {
+    position: relative;
+    z-index: 10;
+
+    display: flex;
+    gap: 12px;
+
+    flex-wrap: wrap;
+
+    margin-top: 20px;
+}
+
+.acoes-card button {
+    position: relative;
+    z-index: 11;
+
+    flex: 1;
+
+    min-width: 120px;
+}
+
+/* ANIMAÇÕES */
+
+@keyframes fadeDown {
+    from {
+        opacity: 0;
+        transform: translateY(-18px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes cardEnter {
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* RESPONSIVO */
+
+@media (max-width: 950px) {
+
+    #app {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        position: relative;
+
+        height: auto;
+
+        border-right: none;
+
+        border-bottom:
+            1px solid rgba(255,255,255,0.08);
+    }
+
+    nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .nav-btn {
+        justify-content: center;
+
+        flex: 1;
+
+        min-width: 150px;
+    }
+
+    .content {
+        padding: 24px;
+    }
+
+    .topo {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 560px) {
+
+    .content {
+        padding: 16px;
+    }
+
+    .sidebar {
+        padding: 18px;
+    }
+
+    .section-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    button,
+    .nav-btn {
+        width: 100%;
+    }
+
+    .grid-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .acoes-card {
+        flex-direction: column;
+    }
+
+    .acoes-card button {
+        width: 100%;
+    }
+
+    .topo h1 {
+        font-size: 34px;
+    }
+
+    h2 {
+        font-size: 24px;
+    }
+}

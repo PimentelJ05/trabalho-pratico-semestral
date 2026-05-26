@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CineReview</title>
+
+  <link rel="stylesheet" href="/frontend/styles.css" />
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+  <div id="app">
+    <aside class="sidebar">
+      <div class="logo">
+        <i data-lucide="clapperboard"></i>
+        <span>CineReview</span>
+      </div>
+
+      <nav>
+        <button onclick="mostrarTela('filmes')" data-tela="filmes" class="nav-btn active">
+          <i data-lucide="film"></i>
+          Filmes
+        </button>
+
+        <button onclick="mostrarTela('novo-filme')" data-tela="novo-filme" class="nav-btn">
+          <i data-lucide="plus-circle"></i>
+          Novo Filme
+        </button>
+
+        <button onclick="mostrarTela('avaliacoes')" data-tela="avaliacoes" class="nav-btn">
+          <i data-lucide="star"></i>
+          Avaliações
+        </button>
+      </nav>
+    </aside>
+
+    <main class="content">
+      <header class="topo">
+        <div>
+          <h1>Plataforma de Filmes</h1>
+          <p>Gerencie filmes e avaliações em tempo real.</p>
+        </div>
+
+        <span class="badge">API + MongoDB</span>
+      </header>
+
+      <section id="tela-filmes" class="tela ativa">
+        <div class="section-header">
+          <div>
+            <h2>Filmes cadastrados</h2>
+            <p class="subtitulo">Visualize, edite, exclua e consulte avaliações dos filmes.</p>
+          </div>
+
+          <button onclick="listarFilmes()">
+            <i data-lucide="refresh-cw"></i>
+            Atualizar
+          </button>
+        </div>
+
+        <div id="lista-filmes" class="grid-cards"></div>
+      </section>
+
+      <section id="tela-novo-filme" class="tela">
+        <div class="form-container">
+          <h2>Cadastrar / Editar Filme</h2>
+          <p class="subtitulo">Preencha os dados do filme para salvar no MongoDB.</p>
+
+          <form id="form-filme">
+            <input type="text" id="titulo" placeholder="Título" required />
+            <input type="text" id="descricao" placeholder="Descrição" required />
+            <input type="text" id="genero" placeholder="Gênero" required />
+            <input type="number" id="ano" placeholder="Ano" required />
+            <input type="text" id="diretor" placeholder="Diretor" required />
+            <input type="text" id="poster_url" placeholder="URL do pôster" />
+
+            <button type="submit">
+              <i data-lucide="save"></i>
+              Salvar Filme
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <section id="tela-avaliacoes" class="tela">
+        <div class="form-container">
+          <h2>Cadastrar / Editar Avaliação</h2>
+          <p class="subtitulo">Use o ID de um filme existente para criar uma avaliação.</p>
+
+          <form id="form-avaliacao">
+            <input type="text" id="filme_id" placeholder="ID do filme" required />
+            <input type="text" id="usuario" placeholder="Nome do usuário" required />
+            <input type="number" id="nota" min="1" max="5" placeholder="Nota de 1 a 5" required />
+            <textarea id="comentario" placeholder="Comentário" required></textarea>
+
+            <button type="submit">
+              <i data-lucide="star"></i>
+              Salvar Avaliação
+            </button>
+          </form>
+        </div>
+
+        <div class="section-header">
+          <div>
+            <h2>Avaliações cadastradas</h2>
+            <p class="subtitulo">Veja, edite ou exclua avaliações dos filmes.</p>
+          </div>
+
+          <button onclick="listarAvaliacoes()">
+            <i data-lucide="refresh-cw"></i>
+            Ver todas
+          </button>
+        </div>
+
+        <div id="lista-avaliacoes" class="grid-cards"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/frontend/script.js"></script>
+</body>
+</html>
