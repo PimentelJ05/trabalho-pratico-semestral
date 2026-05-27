@@ -1,4 +1,3 @@
-````md
 # 🎬 CineReview API
 
 Sistema completo de catálogo e avaliações de filmes desenvolvido com FastAPI, MongoDB e frontend moderno responsivo.
@@ -402,5 +401,4 @@ As regras de autenticação foram desacopladas das rotas usando dependências do
 ✅ SOLID
 ✅ Responsivo
 
-```
-```
+
