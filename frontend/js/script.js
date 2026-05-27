@@ -1,5 +1,11 @@
 const API_URL = "http://127.0.0.1:8000";
 
+const token = localStorage.getItem("token");
+
+if (!token) {
+  window.location.href = "index.html";
+}
+
 const listaFilmes = document.getElementById("lista-filmes");
 const listaAvaliacoes = document.getElementById("lista-avaliacoes");
 const formFilme = document.getElementById("form-filme");
@@ -8,7 +14,15 @@ const formAvaliacao = document.getElementById("form-avaliacao");
 let filmeEditandoId = null;
 let avaliacaoEditandoId = null;
 
+function getHeaders() {
+  return {
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${token}`
+  };
+}
+
 function mostrarTela(tela) {
+
   document.querySelectorAll(".tela").forEach((secao) => {
     secao.classList.remove("ativa");
   });
@@ -20,6 +34,7 @@ function mostrarTela(tela) {
   document.getElementById(`tela-${tela}`).classList.add("ativa");
 
   const botao = document.querySelector(`[data-tela="${tela}"]`);
+
   if (botao) {
     botao.classList.add("active");
   }
@@ -28,60 +43,99 @@ function mostrarTela(tela) {
 }
 
 async function listarFilmes() {
-  const resposta = await fetch(`${API_URL}/filmes/`);
-  const filmes = await resposta.json();
 
-  listaFilmes.innerHTML = "";
+  try {
 
-  filmes.forEach((filme) => {
-    const card = document.createElement("article");
-    card.className = "card";
+    const resposta = await fetch(`${API_URL}/filmes/`, {
+      headers: getHeaders()
+    });
 
-    card.innerHTML = `
-      <h3>🎬 ${filme.titulo}</h3>
-      <p><strong>Gênero:</strong> ${filme.genero}</p>
-      <p><strong>Ano:</strong> ${filme.ano}</p>
-      <p><strong>Diretor:</strong> ${filme.diretor}</p>
-      <p><strong>Descrição:</strong> ${filme.descricao}</p>
-      <span class="id">ID: ${filme.id}</span>
+    const filmes = await resposta.json();
 
-      <div class="acoes-card">
-        <button class="btn-editar">
-          <i data-lucide="edit"></i>
-          Editar
-        </button>
+    listaFilmes.innerHTML = "";
 
-        <button class="btn-excluir">
-          <i data-lucide="trash"></i>
-          Excluir
-        </button>
+    filmes.forEach((filme) => {
 
-        <button class="btn-avaliacoes">
-          <i data-lucide="message-circle"></i>
-          Avaliações
-        </button>
-      </div>
+      const card = document.createElement("article");
+
+      card.className = "card";
+
+      card.innerHTML = `
+        <h3>🎬 ${filme.titulo}</h3>
+
+        <p>
+          <strong>Gênero:</strong>
+          ${filme.genero}
+        </p>
+
+        <p>
+          <strong>Ano:</strong>
+          ${filme.ano}
+        </p>
+
+        <p>
+          <strong>Diretor:</strong>
+          ${filme.diretor}
+        </p>
+
+        <p>
+          <strong>Descrição:</strong>
+          ${filme.descricao}
+        </p>
+
+        <span class="id">
+          ID: ${filme.id}
+        </span>
+
+        <div class="acoes-card">
+
+          <button class="btn-editar">
+            <i data-lucide="edit"></i>
+            Editar
+          </button>
+
+          <button class="btn-excluir">
+            <i data-lucide="trash"></i>
+            Excluir
+          </button>
+
+          <button class="btn-avaliacoes">
+            <i data-lucide="message-circle"></i>
+            Avaliações
+          </button>
+
+        </div>
+      `;
+
+      card
+        .querySelector(".btn-editar")
+        .addEventListener("click", () => editarFilme(filme));
+
+      card
+        .querySelector(".btn-excluir")
+        .addEventListener("click", () => deletarFilme(filme.id));
+
+      card
+        .querySelector(".btn-avaliacoes")
+        .addEventListener("click", () => verAvaliacoesDoFilme(filme.id));
+
+      listaFilmes.appendChild(card);
+    });
+
+    lucide.createIcons();
+
+  } catch (erro) {
+
+    console.error(erro);
+
+    listaFilmes.innerHTML = `
+      <p>Erro ao carregar filmes 😭</p>
     `;
-
-    card
-      .querySelector(".btn-editar")
-      .addEventListener("click", () => editarFilme(filme));
-
-    card
-      .querySelector(".btn-excluir")
-      .addEventListener("click", () => deletarFilme(filme.id));
-
-    card
-      .querySelector(".btn-avaliacoes")
-      .addEventListener("click", () => verAvaliacoesDoFilme(filme.id));
-
-    listaFilmes.appendChild(card);
-  });
-
-  lucide.createIcons();
+  }
 }
 
 function editarFilme(filme) {
+
   filmeEditandoId = filme.id;
 
   document.getElementById("titulo").value = filme.titulo;
@@ -95,18 +149,23 @@ function editarFilme(filme) {
 }
 
 async function deletarFilme(id) {
-  const confirmar = confirm("Tem certeza que deseja excluir este filme?");
+
+  const confirmar = confirm(
+    "Tem certeza que deseja excluir este filme?"
+  );
 
   if (!confirmar) return;
 
   await fetch(`${API_URL}/filmes/${id}`, {
-    method: "DELETE"
+    method: "DELETE",
+    headers: getHeaders()
   });
 
   listarFilmes();
 }
 
 formFilme.addEventListener("submit", async (event) => {
+
   event.preventDefault();
 
   const filme = {
@@ -119,47 +178,71 @@ formFilme.addEventListener("submit", async (event) => {
   };
 
   if (filmeEditandoId) {
+
     await fetch(`${API_URL}/filmes/${filmeEditandoId}`, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      headers: getHeaders(),
       body: JSON.stringify(filme)
     });
 
     filmeEditandoId = null;
+
   } else {
+
     await fetch(`${API_URL}/filmes/`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: getHeaders(),
       body: JSON.stringify(filme)
     });
   }
 
-    formFilme.reset();
+  formFilme.reset();
+
   mostrarTela("filmes");
+
   listarFilmes();
 });
 
 async function listarAvaliacoes() {
-  const resposta = await fetch(`${API_URL}/avaliacoes/`);
+
+  const resposta = await fetch(`${API_URL}/avaliacoes/`, {
+    headers: getHeaders()
+  });
+
   const avaliacoes = await resposta.json();
 
   renderizarAvaliacoes(avaliacoes);
 }
 
 function renderizarAvaliacoes(avaliacoes) {
+
   listaAvaliacoes.innerHTML = "";
 
   avaliacoes.forEach((avaliacao) => {
+
     const card = document.createElement("article");
+
     card.className = "card";
 
     card.innerHTML = `
       <h3>⭐ Nota ${avaliacao.nota}/5</h3>
-      <p><strong>Usuário:</strong> ${avaliacao.usuario}</p>
-      <p><strong>Comentário:</strong> ${avaliacao.comentario}</p>
-      <span class="id">Filme ID: ${avaliacao.filme_id}</span>
+
+      <p>
+        <strong>Usuário:</strong>
+        ${avaliacao.usuario}
+      </p>
+
+      <p>
+        <strong>Comentário:</strong>
+        ${avaliacao.comentario}
+      </p>
+
+      <span class="id">
+        Filme ID: ${avaliacao.filme_id}
+      </span>
 
       <div class="acoes-card">
+
         <button class="btn-editar-avaliacao">
           <i data-lucide="edit"></i>
           Editar
@@ -169,6 +252,7 @@ function renderizarAvaliacoes(avaliacoes) {
           <i data-lucide="trash"></i>
           Excluir
         </button>
+
       </div>
     `;
 
@@ -187,6 +271,7 @@ function renderizarAvaliacoes(avaliacoes) {
 }
 
 function editarAvaliacao(avaliacao) {
+
   avaliacaoEditandoId = avaliacao.id;
 
   document.getElementById("filme_id").value = avaliacao.filme_id;
@@ -198,18 +283,23 @@ function editarAvaliacao(avaliacao) {
 }
 
 async function deletarAvaliacao(id) {
-  const confirmar = confirm("Tem certeza que deseja excluir esta avaliação?");
+
+  const confirmar = confirm(
+    "Tem certeza que deseja excluir esta avaliação?"
+  );
 
   if (!confirmar) return;
 
   await fetch(`${API_URL}/avaliacoes/${id}`, {
-    method: "DELETE"
+    method: "DELETE",
+    headers: getHeaders()
   });
 
   listarAvaliacoes();
 }
 
 formAvaliacao.addEventListener("submit", async (event) => {
+
   event.preventDefault();
 
   const avaliacao = {
@@ -220,33 +310,46 @@ formAvaliacao.addEventListener("submit", async (event) => {
   };
 
   if (avaliacaoEditandoId) {
+
     await fetch(`${API_URL}/avaliacoes/${avaliacaoEditandoId}`, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      headers: getHeaders(),
       body: JSON.stringify(avaliacao)
     });
 
     avaliacaoEditandoId = null;
+
   } else {
+
     await fetch(`${API_URL}/avaliacoes/`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: getHeaders(),
       body: JSON.stringify(avaliacao)
     });
   }
 
   formAvaliacao.reset();
+
   listarAvaliacoes();
 });
 
 async function verAvaliacoesDoFilme(filmeId) {
-  const resposta = await fetch(`${API_URL}/avaliacoes/filme/${filmeId}`);
+
+  const resposta = await fetch(
+    `${API_URL}/avaliacoes/filme/${filmeId}`,
+    {
+      headers: getHeaders()
+    }
+  );
+
   const avaliacoes = await resposta.json();
 
   mostrarTela("avaliacoes");
+
   renderizarAvaliacoes(avaliacoes);
 }
 
 listarFilmes();
 listarAvaliacoes();
+
 lucide.createIcons();
