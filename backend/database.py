@@ -13,5 +13,6 @@ database = client[DATABASE_NAME]
 
 filmes_collection = database["filmes"]
 avaliacoes_collection = database["avaliacoes"]
+usuarios_collection = database["usuarios"]
 
 print("MongoDB conectado com sucesso!")
