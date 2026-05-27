@@ -1,6 +1,6 @@
 # 🎬 CineReview API
 
-Sistema completo de catálogo e avaliações de filmes desenvolvido com FastAPI, MongoDB e frontend moderno responsivo.
+Sistema completo de catálogo e avaliações de filmes desenvolvido com FastAPI, MongoDB, autenticação JWT e frontend moderno responsivo.
 
 ---
 
@@ -9,6 +9,7 @@ Sistema completo de catálogo e avaliações de filmes desenvolvido com FastAPI,
 O CineReview é uma aplicação full stack desenvolvida para gerenciamento de filmes e avaliações cinematográficas.
 
 O sistema permite:
+
 - cadastro de usuários
 - autenticação JWT
 - controle de acesso por perfil
@@ -17,6 +18,7 @@ O sistema permite:
 - frontend moderno responsivo
 - testes unitários
 - aplicação de princípios SOLID
+- dockerização completa da aplicação
 
 ---
 
@@ -55,11 +57,13 @@ O sistema permite:
 ## ✅ Controle de Acesso (RBAC)
 
 Perfis disponíveis:
+
 - `admin`
 - `usuario`
 
-Permissões:
-- Administradores podem editar/deletar filmes
+### Permissões
+
+- Administradores podem editar e deletar registros
 - Usuários comuns possuem acesso limitado
 
 ---
@@ -67,29 +71,35 @@ Permissões:
 ## ✅ Frontend Moderno
 
 Interface desenvolvida com:
-- glassmorphism
-- animações
+
+- Interface moderna baseada em Glassmorphism
+- animações suaves
 - layout responsivo
-- efeitos modernos
 - dashboard administrativa
+- telas modernas de login e cadastro
+- tema cinematográfico
 
 ---
 
 # 🛠️ Tecnologias Utilizadas
 
 ## Backend
+
 - Python
 - FastAPI
 - MongoDB
 - PyMongo
 - Pydantic
 - JWT
+- python-jose
 - Passlib
+- bcrypt
 - Uvicorn
 
 ---
 
 ## Frontend
+
 - HTML5
 - CSS3
 - JavaScript
@@ -98,7 +108,17 @@ Interface desenvolvida com:
 ---
 
 ## Testes
+
 - Pytest
+
+---
+
+## Docker
+
+- Docker
+- Docker Compose
+- MongoDB Container
+- Python Container
 
 ---
 
@@ -107,7 +127,11 @@ Interface desenvolvida com:
 ```txt
 trabalho-pratico-semestral/
 │
+├── docker-compose.yml
+│
 ├── backend/
+│   │
+│   ├── Dockerfile
 │   │
 │   ├── dependencies/
 │   │   └── auth_dependency.py
@@ -138,7 +162,7 @@ trabalho-pratico-semestral/
 │   ├── dashboard.html
 │   │
 │   ├── css/
-│   │   └── styles.css
+│   │   └── style.css
 │   │
 │   └── js/
 │       ├── login.js
@@ -148,11 +172,11 @@ trabalho-pratico-semestral/
 ├── SOLID.md
 ├── .gitignore
 └── README.md
-````
+```
 
 ---
 
-# ⚙️ Como Executar o Projeto
+# ⚙️ Como Executar o Projeto Localmente
 
 # 1️⃣ Clonar o repositório
 
@@ -162,7 +186,15 @@ git clone https://github.com/PimentelJ05/trabalho-pratico-semestral.git
 
 ---
 
-# 2️⃣ Entrar na pasta backend
+# 2️⃣ Entrar na pasta do projeto
+
+```bash
+cd trabalho-pratico-semestral
+```
+
+---
+
+# 3️⃣ Entrar no backend
 
 ```bash
 cd backend
@@ -170,7 +202,7 @@ cd backend
 
 ---
 
-# 3️⃣ Criar ambiente virtual
+# 4️⃣ Criar ambiente virtual
 
 ```bash
 python -m venv venv
@@ -178,7 +210,7 @@ python -m venv venv
 
 ---
 
-# 4️⃣ Ativar ambiente virtual
+# 5️⃣ Ativar ambiente virtual
 
 ## Windows PowerShell
 
@@ -188,7 +220,7 @@ python -m venv venv
 
 ---
 
-# 5️⃣ Instalar dependências
+# 6️⃣ Instalar dependências
 
 ```bash
 pip install -r requirements.txt
@@ -196,11 +228,53 @@ pip install -r requirements.txt
 
 ---
 
-# 6️⃣ Executar o servidor
+# 7️⃣ Executar o servidor
 
 ```bash
 python -m uvicorn main:app --reload
 ```
+
+---
+
+# 🐳 Executando com Docker
+
+## Pré-requisitos
+
+- Docker Desktop instalado
+
+---
+
+## Executar containers
+
+Na raiz do projeto:
+
+```bash
+docker compose up --build
+```
+
+---
+
+## Acessos
+
+### Backend
+
+```txt
+http://localhost:8000
+```
+
+### Swagger
+
+```txt
+http://localhost:8000/docs
+```
+
+---
+
+## Containers utilizados
+
+- FastAPI
+- MongoDB
+- Docker Compose
 
 ---
 
@@ -228,7 +302,9 @@ http://127.0.0.1:8000/docs
 
 2. Instale a extensão:
 
-* Live Server
+```txt
+Live Server
+```
 
 3. Clique com botão direito em:
 
@@ -313,13 +389,15 @@ pytest
 
 ## Sucesso
 
-* Criação de filme válido
-* Busca de filme existente
+- Criação de filme válido
+- Busca de filme existente
+
+---
 
 ## Erro
 
-* Filme sem título
-* Busca de filme inexistente
+- Filme sem título
+- Busca de filme inexistente
 
 ---
 
@@ -339,10 +417,10 @@ SOLID.md
 
 Separação de responsabilidades entre:
 
-* rotas
-* autenticação
-* dependências
-* modelos
+- rotas
+- autenticação
+- dependências
+- modelos
 
 ---
 
@@ -354,51 +432,63 @@ Os modelos e rotas podem ser estendidos sem modificar a estrutura principal.
 
 ## D — Dependency Inversion Principle
 
-As regras de autenticação foram desacopladas das rotas usando dependências do FastAPI.
+As regras de autenticação foram desacopladas das rotas utilizando dependências do FastAPI.
 
 ---
 
 # 🎨 Características do Frontend
 
-* Responsivo
-* Glassmorphism
-* Sidebar moderna
-* Cards animados
-* Dashboard administrativa
-* Tela de login
-* Tela de cadastro
-* Tema cinematográfico
+- Responsivo
+- Interface moderna baseada em Glassmorphism
+- Sidebar moderna
+- Cards animados
+- Dashboard administrativa
+- Tela de login
+- Tela de cadastro
+- Tema cinematográfico
 
 ---
 
 # 📚 Funcionalidades Extras
 
-✅ JWT
-✅ RBAC
-✅ Testes Unitários
-✅ SOLID
-✅ Frontend Responsivo
-✅ Dashboard Moderna
-✅ Swagger
-✅ MongoDB
+✅ JWT  
+✅ RBAC  
+✅ Testes Unitários  
+✅ SOLID  
+✅ Frontend Responsivo  
+✅ Dashboard Moderna  
+✅ Swagger  
+✅ MongoDB  
+✅ Docker  
+✅ Docker Compose  
+
+---
+
+# 📖 Documentação
+
+A documentação interativa da API pode ser acessada via Swagger:
+
+```txt
+http://localhost:8000/docs
+```
 
 ---
 
 # 👩‍💻 Desenvolvedores
 
-* Júlia Carla Ferreira Pimentel
+- Júlia Carla Ferreira Pimentel
 
 ---
 
 # 🚀 Status do Projeto
 
-✅ Projeto Finalizado
-✅ Backend Completo
-✅ Frontend Completo
-✅ Autenticação JWT
-✅ Controle de Acesso
-✅ Testes Unitários
-✅ SOLID
-✅ Responsivo
-
-
+✅ Projeto Finalizado  
+✅ Backend Completo  
+✅ Frontend Completo  
+✅ Autenticação JWT  
+✅ Controle de Acesso  
+✅ Testes Unitários  
+✅ SOLID  
+✅ Responsivo  
+✅ Dockerizado  
+✅ Swagger  
