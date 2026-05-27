@@ -34,16 +34,6 @@ O sistema permite:
 
 ---
 
-## ✅ CRUD de Avaliações
-
-- Criar avaliações
-- Listar avaliações
-- Buscar avaliação por ID
-- Atualizar avaliações
-- Deletar avaliações
-
----
-
 ## ✅ Sistema de Autenticação JWT
 
 - Registro de usuários
