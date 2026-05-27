@@ -1,0 +1,36 @@
+services:
+
+  backend:
+    build: ./backend
+
+    container_name: cinereview_backend
+
+    ports:
+      - "8000:8000"
+
+    volumes:
+      - ./backend:/app
+
+    depends_on:
+      - mongo
+
+    environment:
+      - MONGO_URL=mongodb://mongo:27017
+      - DATABASE_NAME=cinereview
+      - SECRET_KEY=supersecretkey
+      - ALGORITHM=HS256
+      - ACCESS_TOKEN_EXPIRE_MINUTES=60
+
+  mongo:
+    image: mongo:7
+
+    container_name: cinereview_mongo
+
+    ports:
+      - "27017:27017"
+
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:
